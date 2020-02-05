@@ -50,6 +50,7 @@ for line in extract_ceara.findAll(class_='ca'):
     salario.append(''.join(re.findall('R\$ *\d*\.*\d*\,*\d*', str(line.find(class_='cd'))))) # salary
     inscricao.append(''.join(re.findall('\d+/\d+/\d+', str(line.find(class_='ce')))))
 
+# Criando arquivo CSV
 for i in range(0,len(name)):
     combinacao_nacional=[name[i],vagas[i],nivel[i],salario[i],inscricao[i],link[i]]
     df=pd.DataFrame(combinacao_nacional)
