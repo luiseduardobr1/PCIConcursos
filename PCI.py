@@ -5,8 +5,6 @@ import requests, re, os, time, ctypes
 import pandas as pd
 from datetime import date
 import filecmp
-import csv
-import itertools
 
 # Date
 today = date.today()
