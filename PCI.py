@@ -1,10 +1,12 @@
 #! python3
-# coding: latin-1
 
 from bs4 import BeautifulSoup
 import requests, re, os, time, ctypes
 import pandas as pd
 from datetime import date
+import filecmp
+import csv
+import itertools
 
 # Date
 today = date.today()
@@ -50,22 +52,32 @@ for line in extract_ceara.findAll(class_='ca'):
     salario.append(''.join(re.findall('R\$ *\d*\.*\d*\,*\d*', str(line.find(class_='cd'))))) # salary
     inscricao.append(''.join(re.findall('\d+/\d+/\d+', str(line.find(class_='ce')))))
 
-# Criando arquivo CSV
 for i in range(0,len(name)):
     combinacao_nacional=[name[i],vagas[i],nivel[i],salario[i],inscricao[i],link[i]]
     df=pd.DataFrame(combinacao_nacional)
     with open('ConcursosAtivos'+d1+'.csv', 'a', encoding='utf-16', newline='') as f:
-        df.transpose().to_csv(f, encoding='iso-8859-1', header=False, sep = "\t", index=False)
-        
-# Conferindo se há algum concurso novo        
-try:
-    tamanho_arquivo_original=os.path.getsize('ConcursosAtivos.csv')
-    tamanho_arquivo_temp=os.path.getsize('ConcursosAtivos'+d1+'.csv') 
-    if tamanho_arquivo_original!=tamanho_arquivo_temp:
-        ctypes.windll.user32.MessageBoxW(0, "Novo concurso!", "Aviso", 1)
-        os.remove('ConcursosAtivos.csv')
-        os.rename('ConcursosAtivos'+d1+'.csv','ConcursosAtivos.csv')
-    else:
-        os.remove('ConcursosAtivos'+d1+'.csv')
-except:
+        df.transpose().to_csv(f, encoding='utf-16', header=False, sep = "\t", index=False)
+
+# Checar se há concursos novos
+novos_concursos=['Concursos novos disponíveis: ']
+if os.path.isfile('ConcursosAtivos.csv')==False:
     os.rename('ConcursosAtivos'+d1+'.csv','ConcursosAtivos.csv')
+else:
+    if filecmp.cmp('ConcursosAtivos.csv', 'ConcursosAtivos'+d1+'.csv') == False:
+        antigo = pd.read_csv('ConcursosAtivos.csv', encoding='utf-16', header=None, sep = "\t")
+        novo = pd.read_csv('ConcursosAtivos'+d1+'.csv', encoding='utf-16', header=None, sep = "\t")
+        for contador in range(1,novo.shape[0]):
+            encontrou=0
+            for contador2 in range(1,antigo.shape[0]):
+                if novo.iloc[contador,0]==antigo.iloc[contador2,0] and novo.iloc[contador,1]==antigo.iloc[contador2,1]:
+                    encontrou=1
+            if encontrou==0:
+                print(novo.iloc[contador,0])
+                novos_concursos.append(novo.iloc[contador,0]+' - '+novo.iloc[contador,2])
+
+    os.remove('ConcursosAtivos.csv')
+    os.rename('ConcursosAtivos'+d1+'.csv','ConcursosAtivos.csv')
+
+# Avisa se houver concursos novos
+if len(novos_concursos)>1:
+    ctypes.windll.user32.MessageBoxW(0, '\n'.join(novos_concursos), "Novo Concurso", 1)
