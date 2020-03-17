@@ -33,7 +33,7 @@ combinacao_nacional=[]
 for line in extract_nacional.findAll(class_='ca'):
     name.append(line.find('a').text.strip()) # get name of institution
     link.append(line.find('a', href=True)['href']) # More information
-    vagas.append(re.findall('(\d*) vaga', str(line.find(class_='cd')))[0]) # get number of available job's
+    vagas.append(''.join(re.findall('(\d*) vaga', str(line.find(class_='cd'))))) # get number of available job's
     nivel.append('/'.join(re.findall('Superior|Médio', str(line.find(class_='cd'))))) # level
     salario.append(''.join(re.findall('R\$ *\d*\.*\d*\,*\d*', str(line.find(class_='cd'))))) # salary
     inscricao.append(''.join(re.findall('\d+/\d+/\d+', str(line.find(class_='ce')))))
@@ -56,7 +56,6 @@ for i in range(0,len(name)):
     with open('ConcursosAtivos'+d1+'.csv', 'a', encoding='utf-16', newline='') as f:
         df.transpose().to_csv(f, encoding='utf-16', header=False, sep = "\t", index=False)
 
-# Checar se há concursos novos
 novos_concursos=['Concursos novos disponíveis: ']
 if os.path.isfile('ConcursosAtivos.csv')==False:
     os.rename('ConcursosAtivos'+d1+'.csv','ConcursosAtivos.csv')
@@ -71,11 +70,10 @@ else:
                     encontrou=1
             if encontrou==0:
                 print(novo.iloc[contador,0])
-                novos_concursos.append(novo.iloc[contador,0]+' - '+novo.iloc[contador,2])
+                novos_concursos.append(str(novo.iloc[contador,0])+' - '+str(novo.iloc[contador,2]))
 
     os.remove('ConcursosAtivos.csv')
     os.rename('ConcursosAtivos'+d1+'.csv','ConcursosAtivos.csv')
 
-# Avisa se houver concursos novos
 if len(novos_concursos)>1:
     ctypes.windll.user32.MessageBoxW(0, '\n'.join(novos_concursos), "Novo Concurso", 1)
