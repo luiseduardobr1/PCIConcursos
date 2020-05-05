@@ -6,6 +6,8 @@ import pandas as pd
 from datetime import date
 import filecmp
 
+# asudahdahsudhasd
+
 # Date
 today = date.today()
 d1 = today.strftime("%d%m%Y")
@@ -37,7 +39,7 @@ for line in extract_nacional.findAll(class_='ca'):
     nivel.append('/'.join(re.findall('Superior|Médio', str(line.find(class_='cd'))))) # level
     salario.append(''.join(re.findall('R\$ *\d*\.*\d*\,*\d*', str(line.find(class_='cd'))))) # salary
     inscricao.append(''.join(re.findall('\d+/\d+/\d+', str(line.find(class_='ce')))))
-    
+
 # ---------- CONCURSOS CEARÁ --------------------------------
 ceara=source_nacional[source_nacional.find('<div class="uf">CEARÁ</div>')+len('<div class="uf">CEARÁ</div>'):source_nacional.find('<div class="uf">MARANHÃO</div>')+len('<div class="uf">MARANHÃO</div>')]
 extract_ceara=BeautifulSoup(ceara,"html.parser")
