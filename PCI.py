@@ -1,12 +1,12 @@
 #! python3
 
+# Luís Eduardo Pompeu
+
 from bs4 import BeautifulSoup
 import requests, re, os, time, ctypes
 import pandas as pd
 from datetime import date
 import filecmp
-
-# asudahdahsudhasd
 
 # Date
 today = date.today()
