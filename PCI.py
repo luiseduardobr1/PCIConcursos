@@ -1,6 +1,6 @@
 #! python3
 
-# Luís Eduardo Pompeu - Testando 2
+# Luís Eduardo Pompeu
 
 from bs4 import BeautifulSoup
 import requests, re, os, time, ctypes
