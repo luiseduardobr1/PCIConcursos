@@ -192,7 +192,6 @@ if __name__ == '__main__':
     # Save as CSV
     df = pd.DataFrame(state)
     df = df.replace(r'^\s*$', '-', regex=True)
-    #df.fillna('-', inplace = True)
     with open('ConcursosAtivos' + date_now + '.csv', 'a', encoding='utf-16', newline='') as f:
         df.to_csv(f, encoding = 'utf-16', header = False, sep = "\t", index = False)
 
